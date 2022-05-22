@@ -1,8 +1,8 @@
-// temp book objets for testing
+// temp book objects for testing
 let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
 let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
 
-let myLibrary = [];
+let myLibrary = new Array;
 
 const cardHolder = document.querySelector('#card-holder')
 
@@ -12,18 +12,31 @@ form.addEventListener('submit', addBookToLibrary)
 
 
 // Book object details
-function Book(title, author, pages, read=false) {
-  this.title = title
-  this.author = author
-  this.pages = pages
-  this.read = read
+class Book {
 
-}
-Book.prototype.info = function() {
-  return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? 'read': 'not read yet'}`
-}
-Book.prototype.updateReadStatus = function () {
-  this.read = !this.read 
+  constructor (title, author, pages, read=false) {
+    this.title = title
+    this.author = author
+    this.pages = pages
+    this.read = read
+  }
+
+  getInfo = () => {
+      return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? 'read': 'not read yet'}`
+  }
+
+  updateReadStatus = () => {
+    this.read = !this.read
+  }
+
+// Book.prototype.info = function() {
+//   return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? 'read': 'not read yet'}`
+// }
+
+// Book.prototype.updateReadStatus = function () {
+//   this.read = !this.read 
+// }
+
 }
 
 
