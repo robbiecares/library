@@ -19,15 +19,32 @@ class Book {
     this.author = author
     this.pages = pages
     this.read = read
+    this.id = null
   }
 
-  getInfo = () => {
+  displayInfo = () => {
       return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? 'read': 'not read yet'}`
   }
 
   updateReadStatus = () => {
-    this.read = !this.read
+    this.read = !this.read;
+    console.log(`fully read?: ${this.read}`)
   }
+
+  get id() {
+    return this._id
+  }
+
+  set id(i) {
+    if (!this.id) {
+      this._id = i
+    } else {
+      console.log("this book already has an ID")
+      return;
+    }
+
+  }
+
 
 // Book.prototype.info = function() {
 //   return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? 'read': 'not read yet'}`
@@ -51,7 +68,7 @@ function addBookToLibrary(e) {
     details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
 
     // creates book object and adds it to library
-    const book = new Book(...details)
+    let  book = new Book(...details)
     book.id = myLibrary.push(book) - 1
     modal.style.display = "none";
     displayBooks()
@@ -67,7 +84,7 @@ function displayBooks() {
 
 
 function createCard(book) {
-    // Creates a new card containing to display the book's details.
+    // Creates a new card to display the book's details.
 
     const card = document.createElement('div')
     card.classList.add('card')
