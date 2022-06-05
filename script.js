@@ -51,7 +51,7 @@ class Card extends Book {
     const fauxMargin = document.createElement('div')
     fauxMargin.classList.add('card-faux-margin')
     fauxMargin.appendChild(card)
-    shelf.appendChild(fauxMargin)
+    myLibrary.shelfDisplay.appendChild(fauxMargin)
     
     const cardDetails = document.createElement('div')
     cardDetails.classList.add('card-details')
@@ -110,32 +110,32 @@ class Card extends Book {
 
 class Library { 
 
-  // todo: shelf should be 'read only' - add getter/setter
   shelf = new Array;
-
-  displayBooks() {
-    shelf.innerHTML = ""
-    this.shelf.forEach(book =>       
-      new Card(book))
-  }
+  shelfDisplay = document.querySelector('#shelf')
 
 
-  addBook(deets) {
+  // displayBooks() {
+  //   shelf.innerHTML = ""
+  //   this.shelf.forEach(book =>       
+  //     new Card(book))
+  // }
+
+
+  addBook(e) {
     // Creates a new book and card from the user data and adds the book to the library shelf.
     
       // prevents form from submitting and refreshing page
-      // e.preventDefault()
+      e.preventDefault()
       
       // scrubs form data
-      let details = [...form.querySelectorAll('textarea, input')]
+      let details = [...e.target.querySelectorAll('textarea, input')]
       details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
-  
+
       // creates a new card object and adds the book details to the library shelf
-      let card = new Card(...deets)
+      let card = new Card(...details)
       this.shelf.push(card)
-      modal.style.display = "none";
+      main.modal.style.display = "none";
       console.log(`<${card.title}> has been added to the library shelf`)
-      // this.displayBooks()
       return card  
   }
 
@@ -152,24 +152,14 @@ class Library {
 }
 
 
-function displayBooks() {
-  shelf.innerHTML = ''
-  myLibrary.forEach(book => {
-    createCard(book)
-  })
-}
-
-
-function main() {
-
-  const shelf = document.querySelector('#shelf')
+main = (() => {
 
   const modal = document.getElementById("myModal");
+
   const addBookBtn = document.getElementById("add-book-btn");
   const closeModal = document.getElementsByClassName("close")[0];
   let form = document.querySelector('#new-book-form')
-  // form.addEventListener('submit', addBookToLibrary)
-  // form.addEventListener('submit', (e) => {Library.addBook(e)})
+  form.addEventListener('submit', (e) => {myLibrary.addBook(e)})
 
   // display modal
   addBookBtn.onclick = function() {
@@ -182,8 +172,8 @@ function main() {
   }
 
   // alternate modal close (looks for clicks outside of the modal)
-  window.onclick = function(event) {
-    if (event.target == modal) {
+  window.onclick = function(e) {
+    if (e.target == modal) {
       modal.style.display = "none";
     }
   }
@@ -192,23 +182,23 @@ function main() {
   
   // temp book objects for testing
   // let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
-  let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318]
+  // let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
   
-  let card = myLibrary.addBook(nineteenEightyFour)
-  
-
+  // let card = myLibrary.addBook(nineteenEightyFour)
   
   
   // myLibrary.displayBooks()
-}
 
+  return {
+    modal
+  }
 
+})();
 
-
-
-main()
 
 
 
 // todo: is it possible to "name" the type of object? E.g. to typeof() an object and
 // see 'book' or 'card'. Saw this in the reading and think it is. To be tested!
+
+// todo: add getter/setter for shelf data structure?
