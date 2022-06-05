@@ -6,27 +6,28 @@ class Book {
     this.author = author
     this.pages = pages
     this.read = read
-    this.id = Date.now()
+    this._id = Date.now()
   }
+
 
   displayInfo = () => {
       return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? 'read': 'not read yet'}`
   }
 
+
   get id() {
     return this._id
   }
 
-  set id(i) {
-    if (!this.id) {
-      super.id = i
-    } else {
-      console.log("this book already has an ID")
-    }
-  }
 
+  set id(i) {
+    console.log("this book already has an ID")
+  }
+  
+  
   updateReadStatus() {
     this.read = !this.read;
+    console.log(`fully read?: ${this.read}`)
   }
 }
 
@@ -59,7 +60,7 @@ class Card extends Book {
     const removebtn = document.createElement('span')
     removebtn.classList.add('close')
     removebtn.innerHTML = '&times;' 
-    removebtn.addEventListener('click', this.remove)
+    removebtn.addEventListener('click', (e) => this.remove(e))
     card.appendChild(removebtn)
 
     let titleAndAuthor = document.createElement('div')
@@ -89,31 +90,21 @@ class Card extends Book {
 
     return card
   }
-  
+
+
+  remove(e) {
+    console.log(this)
+    shelf.remove(this.element.parentElement)
+    myLibrary.removeBook(this)
+
+  }
+
+
   updateReadStatus(e) {
     super.updateReadStatus()
     e.target.innerHTML = `${this.read ?'✓' : '✖'}`
     e.target.style.color = this.read ? 'green' : 'red'
-    console.log(`fully read?: ${this.read}`)
   }
-
-
-  set id(i) {
-    if (!super.id) {
-      super.id = i
-    } else {
-      console.log("this book already has an ID")
-    }
-  }
-
-
-  remove() {
-    const card = this.closest('.card')
-    const id = Number(card.getAttribute('data-book-id'))
-    delete myLibrary[id]
-    shelf.removeChild(card.parentElement)
-  }
-
 }
 
 
@@ -132,12 +123,12 @@ class Library {
   addBook(deets) {
     // Creates a new book and card from the user data and adds the book to the library shelf.
     
-      // // prevents form from submitting and refreshing page
+      // prevents form from submitting and refreshing page
       // e.preventDefault()
       
-      // // scrubs form data
-      // let details = [...form.querySelectorAll('textarea, input')]
-      // details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
+      // scrubs form data
+      let details = [...form.querySelectorAll('textarea, input')]
+      details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
   
       // creates a new card object and adds the book details to the library shelf
       let card = new Card(...deets)
@@ -147,6 +138,17 @@ class Library {
       // this.displayBooks()
       return card  
   }
+
+  findBook(id) {
+    return this.shelf.find(book => book.id === id)
+  }
+
+  removeBook(book) {
+    const i = this.shelf.indexOf(book)
+    const response = this.shelf.splice(i, 1) ? `${book.title} removed` : `${book.title} not found`
+    console.log(response)
+  }
+
 }
 
 
@@ -157,34 +159,35 @@ function displayBooks() {
   })
 }
 
-const shelf = document.querySelector('#shelf')
-
-const modal = document.getElementById("myModal");
-const addBookBtn = document.getElementById("add-book-btn");
-const closeModal = document.getElementsByClassName("close")[0];
-let form = document.querySelector('#new-book-form')
-// form.addEventListener('submit', addBookToLibrary)
-// form.addEventListener('submit', (e) => {Library.addBook(e)})
-
-// display modal
-addBookBtn.onclick = function() {
-  modal.style.display = "block";
-}
-
-// close modal
-closeModal.onclick = function() {
-  modal.style.display = "none";
-}
-
-// alternate modal close (looks for clicks outside of the modal)
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
 
 function main() {
+
+  const shelf = document.querySelector('#shelf')
+
+  const modal = document.getElementById("myModal");
+  const addBookBtn = document.getElementById("add-book-btn");
+  const closeModal = document.getElementsByClassName("close")[0];
+  let form = document.querySelector('#new-book-form')
+  // form.addEventListener('submit', addBookToLibrary)
+  // form.addEventListener('submit', (e) => {Library.addBook(e)})
+
+  // display modal
+  addBookBtn.onclick = function() {
+    modal.style.display = "block";
+  }
+
+  // close modal
+  closeModal.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  // alternate modal close (looks for clicks outside of the modal)
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
   myLibrary = new Library
   
   // temp book objects for testing
@@ -209,6 +212,3 @@ main()
 
 // todo: is it possible to "name" the type of object? E.g. to typeof() an object and
 // see 'book' or 'card'. Saw this in the reading and think it is. To be tested!
-
-
-// stopped at: id can be changed on book/card
