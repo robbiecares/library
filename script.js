@@ -88,13 +88,14 @@ class Card extends Book {
     readStatus.style.color = this.read ? 'green' : 'red'
     cardDetails.appendChild(content)
 
+    console.log(`A card has been created for <${this.title}>`)
     return card
   }
 
 
   remove(e) {
-    console.log(this)
-    shelf.remove(this.element.parentElement)
+    this.element.remove()
+    console.log(`The card for <${this.title}> has been deleted`)
     myLibrary.removeBook(this)
 
   }
@@ -114,17 +115,19 @@ class Library {
   shelfDisplay = document.querySelector('#shelf')
 
 
-  // displayBooks() {
-  //   shelf.innerHTML = ""
-  //   this.shelf.forEach(book =>       
-  //     new Card(book))
-  // }
+  displayBooks() {
+    this.shelfDisplay.innerHTML = ""
+    this.shelf.forEach(card => {
+        this.shelfDisplay.appendChild(card.element);
+        // card.setAttribute('style.display', "flex")
+      });
+  }
 
 
   addBook(e) {
     // Creates a new book and card from the user data and adds the book to the library shelf.
     
-      // prevents form from submitting and refreshing page
+      // prevents form from refreshing page upon submission 
       e.preventDefault()
       
       // scrubs form data
@@ -135,9 +138,10 @@ class Library {
       let card = new Card(...details)
       this.shelf.push(card)
       main.modal.style.display = "none";
-      console.log(`<${card.title}> has been added to the library shelf`)
+      console.log(`<${card.title}> has been added to the library`)
       return card  
   }
+
 
   findBook(id) {
     return this.shelf.find(book => book.id === id)
@@ -145,8 +149,9 @@ class Library {
 
   removeBook(book) {
     const i = this.shelf.indexOf(book)
-    const response = this.shelf.splice(i, 1) ? `${book.title} removed` : `${book.title} not found`
+    const response = this.shelf.splice(i, 1) ? `<${book.title}> has been removed from the library` : `${book.title} was not found in the library`
     console.log(response)
+    this.displayBooks()
   }
 
 }
@@ -155,7 +160,6 @@ class Library {
 main = (() => {
 
   const modal = document.getElementById("myModal");
-
   const addBookBtn = document.getElementById("add-book-btn");
   const closeModal = document.getElementsByClassName("close")[0];
   let form = document.querySelector('#new-book-form')

@@ -46,7 +46,7 @@ body {
   margin: 1%;
 }
 
-#card-holder {
+#shelf {
   width: 90%;  
   display: flex;
   flex-flow: wrap;
