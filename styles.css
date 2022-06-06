@@ -47,25 +47,28 @@ body {
 }
 
 #shelf {
-  width: 90%;  
+  border: 1px solid red;
+  /* height: 100%; */
+  width: 100%;  
   display: flex;
-  flex-flow: wrap;
+  flex-flow: row wrap;
+  padding: 1%;
 }
 
-.card-faux-margin {
-  padding: 1%;
-  display: flex;
-  flex: 0 1 33.333%;
+#shelf::after {
+  content: "";
+  flex: auto;
 }
 
 .card {
-  width: 100%;
   display: flex;
-  justify-content: space-between;
+  /* flex: 1; */
+  flex-basis: 10%;
   border: 1px solid black;
   background-color: plum;
   box-shadow: 10px 5px 5px gray;
-  padding: 1%;
+  margin: 1%;
+  padding: .5%;
 }
 
 .card-details {

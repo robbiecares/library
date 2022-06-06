@@ -46,12 +46,7 @@ class Card extends Book {
     const card = document.createElement('div')
     card.classList.add('card')
     card.setAttribute('data-id', super.id)
-
-    // ensures all cards in the holder have equal borders and spacing
-    const fauxMargin = document.createElement('div')
-    fauxMargin.classList.add('card-faux-margin')
-    fauxMargin.appendChild(card)
-    myLibrary.shelfDisplay.appendChild(fauxMargin)
+    myLibrary.shelfDisplay.appendChild(card)
     
     const cardDetails = document.createElement('div')
     cardDetails.classList.add('card-details')
