@@ -1,5 +1,6 @@
-// Book object details
 class Book {
+  // Data structure for book details
+
 
   constructor (title, author, pages, read=false) {
     this.title = title
@@ -33,6 +34,7 @@ class Book {
 
 
 class Card extends Book {
+  // Display class for book details
 
   // Creates a new card to display the book's details.
   constructor (title, author, pages, read) {
@@ -105,6 +107,7 @@ class Card extends Book {
 
 
 class Library { 
+  // Data structure class for data collection, maintenance and display.
 
   shelf = new Array;
   shelfDisplay = document.querySelector('#shelf')
@@ -119,20 +122,25 @@ class Library {
   }
 
 
-  addBook(e) {
+  addBook(e, details) {
     // Creates a new book and card from the user data and adds the book to the library shelf.
     
-      // prevents form from refreshing page upon submission 
-      e.preventDefault()
+      console.log(e, details)
+      if (e) {
+        // prevents form from refreshing page upon submission 
+        e.preventDefault()
+              
+        // scrubs form data
+        details = [...e.target.querySelectorAll('textarea, input')]
+        details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
+        main.modal.style.display = "none"
+      } 
+
       
-      // scrubs form data
-      let details = [...e.target.querySelectorAll('textarea, input')]
-      details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
 
       // creates a new card object and adds the book details to the library shelf
       let card = new Card(...details)
       this.shelf.push(card)
-      main.modal.style.display = "none";
       console.log(`<${card.title}> has been added to the library`)
       return card  
   }
@@ -148,7 +156,6 @@ class Library {
     console.log(response)
     this.displayBooks()
   }
-
 }
 
 
@@ -158,9 +165,9 @@ main = (() => {
   const addBookBtn = document.getElementById("add-book-btn");
   const closeModal = document.getElementsByClassName("close")[0];
   let form = document.querySelector('#new-book-form')
-  form.addEventListener('submit', (e) => {myLibrary.addBook(e)})
+  form.addEventListener('submit', (e) => {myLibrary.addBook(e, null)})
 
-  // display modal
+  // display modal  
   addBookBtn.onclick = function() {
     modal.style.display = "block";
   }
@@ -178,18 +185,25 @@ main = (() => {
   }
 
   myLibrary = new Library
+
+
   
   // temp book objects for testing
-  // let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
-  // let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
+  let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
+  let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
   
-  // let card = myLibrary.addBook(nineteenEightyFour)
+  
+  for (i=0; i<7; i++) {
+    myLibrary.addBook(null, nineteenEightyFour);
+    myLibrary.addBook(null, lotr);
+  }
   
   
   // myLibrary.displayBooks()
 
   return {
-    modal
+    modal,
+    form
   }
 
 })();
@@ -201,3 +215,8 @@ main = (() => {
 // see 'book' or 'card'. Saw this in the reading and think it is. To be tested!
 
 // todo: add getter/setter for shelf data structure?
+
+// idea: refactor form into one of the classes
+
+
+// stopped at: styling cards and shelf.
