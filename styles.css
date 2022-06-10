@@ -69,35 +69,42 @@ body {
   padding: .5%;
 }
 
-.card > * {
-  /* border: 1px solid red; */
-}
-
 .card-details {
     display: flex;
     flex-flow: column;
+    justify-content: space-between;
     flex: 1;
     gap: 1rem;
     font-size: 1.5rem;
 }
 
+.card-details > * {
+  /* border: 1px solid red; */
+  /* gap:; */
+}
+
+.card-details > * > * {
+  /* border: 1px solid blue; */
+  gap: 1%;
+}
+
 .title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   overflow-wrap: anywhere;
   width: 100%;
+}
+
+.author {
+  font-size: 1.5rem;
 }
 
 .read-status {
   cursor: pointer;
   user-select: none;
+  align-self: flex-end;
+  /* border: 1px solid blue; */
 }
 
-.last-detail {
-  display: flex;
-  justify-content: space-between;
-  justify-self: flex-end;
-  border: 1px solid red;
-}
 
 
 /* The Modal (background) */
@@ -110,7 +117,7 @@ body {
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
+    /* background-color: rgb(0,0,0); Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   }
   
@@ -123,17 +130,15 @@ body {
     width: 50%; /* Could be more or less, depending on screen size */
     display: flex;
     flex-flow: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 1.5rem;
   }
 
 /* The Close Button */
 .close {
   color: #aaa;
-  /* float: right; */
-  font-size: 28px;
+  font-size: 2rem;
   font-weight: bold;
-  border: 1px solid green;
 }
   
 .close:hover,
@@ -163,8 +168,6 @@ input.pages {
 .read input {
   height: 1.5rem;
   width: 1.5rem;
-  
-
 }
 
 input:focus, textarea {

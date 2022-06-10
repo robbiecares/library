@@ -61,29 +61,36 @@ class Card extends Book {
     card.appendChild(removebtn)
 
     let titleAndAuthor = document.createElement('div')
-    titleAndAuthor.classList.add('title-and-author')
     cardDetails.appendChild(titleAndAuthor)
     
     let content = document.createElement('div')
+    content.classList.add('title')
     content.innerHTML = this.title
     titleAndAuthor.appendChild(content)
     
     content = document.createElement('div')
-    content.innerHTML = this.author
+    content.classList.add('author')
+    content.innerHTML =  `by ${this.author}`
     titleAndAuthor.appendChild(content)
 
-    content = document.createElement('div')
-    content.innerHTML = this.pages
-    cardDetails.appendChild(content)
+
+    let pagesAndRead = document.createElement('div')
+    pagesAndRead.classList.add('pages-and-read')
+    cardDetails.appendChild(pagesAndRead)
 
     content = document.createElement('div')
+    pagesAndRead.appendChild(content)
+    content.innerHTML = `pages: ${this.pages}`
+  
+    let readStatusLabel = document.createElement('div')
+    pagesAndRead.appendChild(readStatusLabel)
+    readStatusLabel.innerHTML = 'read: '
     let readStatus = document.createElement('span')  
+    readStatusLabel.appendChild(readStatus)
     readStatus.classList.add('read-status')
-    readStatus.addEventListener('click', (e) => this.updateReadStatus(e))
-    content.appendChild(readStatus)
+    readStatus.addEventListener('click', (e) => this.updateReadStatus(e))    
     readStatus.innerHTML = `${this.read ? '✓' : '✖'}`
     readStatus.style.color = this.read ? 'green' : 'red'
-    cardDetails.appendChild(content)
 
     console.log(`A card has been created for <${this.title}>`)
     return card
@@ -125,7 +132,9 @@ class Library {
   addBook(e, details) {
     // Creates a new book and card from the user data and adds the book to the library shelf.
     
-      console.log(e, details)
+      // console.log(e, details)
+      
+      // check for data received from the form vs. test data
       if (e) {
         // prevents form from refreshing page upon submission 
         e.preventDefault()
@@ -192,14 +201,10 @@ main = (() => {
   let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
   let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
   
-  
   for (i=0; i<7; i++) {
     myLibrary.addBook(null, nineteenEightyFour);
     myLibrary.addBook(null, lotr);
   }
-  
-  
-  // myLibrary.displayBooks()
 
   return {
     modal,
@@ -219,4 +224,4 @@ main = (() => {
 // idea: refactor form into one of the classes
 
 
-// stopped at: styling cards and shelf.
+// stopped at: 
