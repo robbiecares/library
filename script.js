@@ -198,13 +198,13 @@ main = (() => {
 
   
   // temp book objects for testing
-  let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
-  let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
+  // let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
+  // let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
   
-  for (i=0; i<7; i++) {
-    myLibrary.addBook(null, nineteenEightyFour);
-    myLibrary.addBook(null, lotr);
-  }
+  // for (i=0; i<7; i++) {
+  //   myLibrary.addBook(null, nineteenEightyFour);
+  //   myLibrary.addBook(null, lotr);
+  // }
 
   return {
     modal,
