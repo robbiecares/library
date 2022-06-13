@@ -119,7 +119,7 @@ class Library {
   constructor() {
     this.shelf = new Array;
     this.shelfDisplay = document.querySelector('#shelf');
-    this.initializeCardDesk();
+    this.initializeCardForm();
   }
   
 
@@ -144,7 +144,7 @@ class Library {
     let card = new Card(...details)
     this.shelf.push(card)
     console.log(`<${card.title}> has been added to the library`)
-    this.cardDesk.style.display = "none"
+    this.modalBG.style.display = "none"
     return card
   }
 
@@ -170,32 +170,32 @@ class Library {
           
     // scrubs form data
     let details = [...e.target.querySelectorAll('textarea, input')]
-    details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
+    details = details.map(detail => detail.type === 'checkbox' ? detail.checked : detail.value)
     
     return details
   }
 
 
-  initializeCardDesk() {
+  initializeCardForm() {
     // Initializes all details related to the card creation form.
 
-    this.cardDesk = document.getElementById("myModal");
+    this.modalBG = document.getElementById("myModal");
     
     this.addBookBtn = document.getElementById("add-book-btn");
-    this.addBookBtn.addEventListener('click', () => {this.cardDesk.style.display = "block";})
+    this.addBookBtn.addEventListener('click', () => {this.modalBG.style.display = "block";})
 
     this.leaveDesk = document.getElementsByClassName("close")[0];
-    this.leaveDesk.addEventListener('click', () => {this.cardDesk.style.display = "none";})
+    this.leaveDesk.addEventListener('click', () => {this.modalBG.style.display = "none";})
 
     this.cardForm = document.getElementById("new-book-form");
     this.cardForm.addEventListener('submit', (e) => {this.addBook(null, e)})
 
     // alternate modal close (looks for clicks outside of the modal)
-    window.onclick = function(e) {
-      if (e.target == this.cardDesk) {
-        this.cardDesk.style.display = "none";
+    window.addEventListener('click', (e) => {
+      if (e.target == this.modalBG) {
+        this.modalBG.style.display = "none";
       }
-    }
+    })
   }
 }
 
@@ -234,4 +234,4 @@ main = (() => {
 
 // todo: add getter/setter for shelf data structure?
 
-// stopped at: bug - need to update closure of modal upon "outside of modal" click
+// stopped at: 
