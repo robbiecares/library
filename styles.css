@@ -139,6 +139,7 @@ body {
   color: #aaa;
   font-size: 2rem;
   font-weight: bold;
+  align-self: flex-start;
 }
   
 .close:hover,

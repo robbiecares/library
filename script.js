@@ -53,7 +53,7 @@ class Card extends Book {
     const cardDetails = document.createElement('div')
     cardDetails.classList.add('card-details')
     card.appendChild(cardDetails)
-
+    
     const removebtn = document.createElement('span')
     removebtn.classList.add('close')
     removebtn.innerHTML = '&times;' 
@@ -116,9 +116,12 @@ class Card extends Book {
 class Library { 
   // Data structure class for data collection, maintenance and display.
 
-  shelf = new Array;
-  shelfDisplay = document.querySelector('#shelf')
-
+  constructor() {
+    this.shelf = new Array;
+    this.shelfDisplay = document.querySelector('#shelf');
+    this.initializeCardDesk();
+  }
+  
 
   displayBooks() {
     this.shelfDisplay.innerHTML = ""
@@ -129,29 +132,20 @@ class Library {
   }
 
 
-  addBook(e, details) {
-    // Creates a new book and card from the user data and adds the book to the library shelf.
-    
-      // console.log(e, details)
-      
-      // check for data received from the form vs. test data
-      if (e) {
-        // prevents form from refreshing page upon submission 
-        e.preventDefault()
-              
-        // scrubs form data
-        details = [...e.target.querySelectorAll('textarea, input')]
-        details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
-        main.modal.style.display = "none"
-      } 
+  addBook(details, e=null) {
+    // Creates a new card based on user data and adds the card details to the library shelf.
 
-      
+    // scrub details from cardform (this step is skipped when submitting test data)
+    if (e) {
+      details = this.readCard(e)
+    }
 
-      // creates a new card object and adds the book details to the library shelf
-      let card = new Card(...details)
-      this.shelf.push(card)
-      console.log(`<${card.title}> has been added to the library`)
-      return card  
+    // creates a new card object and adds the book details to the library shelf
+    let card = new Card(...details)
+    this.shelf.push(card)
+    console.log(`<${card.title}> has been added to the library`)
+    this.cardDesk.style.display = "none"
+    return card
   }
 
 
@@ -159,48 +153,62 @@ class Library {
     return this.shelf.find(book => book.id === id)
   }
 
+
   removeBook(book) {
     const i = this.shelf.indexOf(book)
     const response = this.shelf.splice(i, 1) ? `<${book.title}> has been removed from the library` : `${book.title} was not found in the library`
     console.log(response)
     this.displayBooks()
   }
+
+
+  readCard(e) {
+    // Reads & formats user input data for new card creation.
+      
+    // prevents form from refreshing page upon submission 
+    e.preventDefault()
+          
+    // scrubs form data
+    let details = [...e.target.querySelectorAll('textarea, input')]
+    details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
+    
+    return details
+  }
+
+
+  initializeCardDesk() {
+    // Initializes all details related to the card creation form.
+
+    this.cardDesk = document.getElementById("myModal");
+    
+    this.addBookBtn = document.getElementById("add-book-btn");
+    this.addBookBtn.addEventListener('click', () => {this.cardDesk.style.display = "block";})
+
+    this.leaveDesk = document.getElementsByClassName("close")[0];
+    this.leaveDesk.addEventListener('click', () => {this.cardDesk.style.display = "none";})
+
+    this.cardForm = document.getElementById("new-book-form");
+    this.cardForm.addEventListener('submit', (e) => {this.addBook(null, e)})
+
+    // alternate modal close (looks for clicks outside of the modal)
+    window.onclick = function(e) {
+      if (e.target == this.cardDesk) {
+        this.cardDesk.style.display = "none";
+      }
+    }
+  }
 }
 
 
 main = (() => {
 
-  const modal = document.getElementById("myModal");
-  const addBookBtn = document.getElementById("add-book-btn");
-  const closeModal = document.getElementsByClassName("close")[0];
-  let form = document.querySelector('#new-book-form')
-  form.addEventListener('submit', (e) => {myLibrary.addBook(e, null)})
-
-  // display modal  
-  addBookBtn.onclick = function() {
-    modal.style.display = "block";
-  }
-
-  // close modal
-  closeModal.onclick = function() {
-    modal.style.display = "none";
-  }
-
-  // alternate modal close (looks for clicks outside of the modal)
-  window.onclick = function(e) {
-    if (e.target == modal) {
-      modal.style.display = "none";
-    }
-  }
-
   myLibrary = new Library
-
-
   
   // temp book objects for testing
   // let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
   // let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
   
+<<<<<<< HEAD
   // for (i=0; i<7; i++) {
   //   myLibrary.addBook(null, nineteenEightyFour);
   //   myLibrary.addBook(null, lotr);
@@ -209,6 +217,11 @@ main = (() => {
   return {
     modal,
     form
+=======
+  for (i=0; i<7; i++) {
+    myLibrary.addBook(nineteenEightyFour);
+    myLibrary.addBook(lotr);
+>>>>>>> 875867a (new card code factored into Library class)
   }
 
 })();
@@ -221,7 +234,4 @@ main = (() => {
 
 // todo: add getter/setter for shelf data structure?
 
-// idea: refactor form into one of the classes
-
-
-// stopped at: 
+// stopped at: bug - need to update closure of modal upon "outside of modal" click
