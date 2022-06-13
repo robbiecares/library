@@ -76,16 +76,7 @@ body {
     flex: 1;
     gap: 1rem;
     font-size: 1.5rem;
-}
-
-.card-details > * {
-  /* border: 1px solid red; */
-  /* gap:; */
-}
-
-.card-details > * > * {
-  /* border: 1px solid blue; */
-  gap: 1%;
+    padding: .5rem;
 }
 
 .title {
@@ -96,6 +87,8 @@ body {
 
 .author {
   font-size: 1.5rem;
+  display: flex;
+  gap: 1rem;
 }
 
 .read-status {
@@ -110,6 +103,8 @@ body {
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
+    flex-flow: column;
+    justify-content: space-between;
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
@@ -124,15 +119,20 @@ body {
 /* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 2%;
+    margin: 15% auto; 
+    padding: 1% 2%;
     border: 1px solid #888;
-    width: 50%; /* Could be more or less, depending on screen size */
+    width: fit-content; 
     display: flex;
     flex-flow: column;
+    justify-content: space-between;
     align-items: center;
     gap: 1.5rem;
   }
+
+.modal-content > * {
+  margin: 1%;
+}
 
 /* The Close Button */
 .close {

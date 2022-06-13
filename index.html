@@ -23,17 +23,17 @@
     <!-- Modal content -->
     <div class="modal-content">
         <form id='new-book-form' class='card' autocomplete="off">
-            <!-- <legend>book details</legend> -->
             <div class='card-details'>
                 <textarea autofocus form='book-form' id='title' class='title' name='book-title' value='' placeholder="Title" rows='3' maxlength='102' required></textarea>
                 <label for='title' form='book-form'></label>
-                <div>
+                <div class="author">
                     <label for='author' form='book-form'>by</label>
                     <input type='text' id='author' name='book-author' value='' placeholder="Author" maxlength="100" required>
                 </div>
                 <div class='pages'>
-                    <input type='number' id='pages' class='pages' name='book-page-count' min='2' max="99999" onKeyPress="if(this.value.length==5) return false;" required>
-                    <label for='pages' form='book-form'>pages</label>
+                    <label for='pages' form='book-form'>
+                        <input type='number' id='pages' class='pages' name='book-page-count' min='2' max="99999" placeholder='pages' onKeyPress="if(this.value.length==5) return false;" required>
+                    </label>
                 </div>
                 <div class='read'>
                     <label for='read' form='new-book-form'>read:</label>
