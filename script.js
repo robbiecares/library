@@ -42,6 +42,7 @@ class Card extends Book {
     this.element = this.createCard();
     }
 
+
   createCard() {
     // creates the DOM elements for the card
 
@@ -50,18 +51,28 @@ class Card extends Book {
     card.setAttribute('data-id', super.id)
     myLibrary.shelfDisplay.appendChild(card)
     
-    const cardDetails = document.createElement('div')
-    cardDetails.classList.add('card-details')
-    card.appendChild(cardDetails)
+    const cardData = document.createElement('div')
+    cardData.classList.add('card-data')
+    card.appendChild(cardData)
     
-    const removebtn = document.createElement('span')
-    removebtn.classList.add('close')
-    removebtn.innerHTML = '&times;' 
-    removebtn.addEventListener('click', (e) => this.remove(e))
-    card.appendChild(removebtn)
+    const cardControls = document.createElement('div')
+    cardControls.classList.add('card-controls')
+    card.appendChild(cardControls)
+
+    const removeBtn = document.createElement('span')
+    removeBtn.classList.add('control', 'close')
+    removeBtn.innerHTML = '&times;' 
+    removeBtn.addEventListener('click', (e) => this.remove(e))
+    cardControls.appendChild(removeBtn)
+
+    const editBtn = document.createElement('span')
+    editBtn.classList.add('control')
+    editBtn.innerHTML = 'E'
+    editBtn.addEventListener('click', (e) => this.edit(e))
+    cardControls.appendChild(editBtn)
 
     let titleAndAuthor = document.createElement('div')
-    cardDetails.appendChild(titleAndAuthor)
+    cardData.appendChild(titleAndAuthor)
     
     let content = document.createElement('div')
     content.classList.add('title')
@@ -76,7 +87,7 @@ class Card extends Book {
 
     let pagesAndRead = document.createElement('div')
     pagesAndRead.classList.add('pages-and-read')
-    cardDetails.appendChild(pagesAndRead)
+    cardData.appendChild(pagesAndRead)
 
     content = document.createElement('div')
     pagesAndRead.appendChild(content)
@@ -110,26 +121,29 @@ class Card extends Book {
     e.target.innerHTML = `${this.read ?'✓' : '✖'}`
     e.target.style.color = this.read ? 'green' : 'red'
   }
+
+
+  edit(e) {
+    myLibrary.editBook(this)
+  }
 }
 
 
 class Library { 
   // Data structure class for data collection, maintenance and display.
 
+  #shelf = new Array
+  #shelfDisplay = document.getElementById('shelf');
+
   constructor() {
-    this.shelf = new Array;
-    this.shelfDisplay = document.querySelector('#shelf');
-<<<<<<< HEAD
-    this.initializeCardDesk();
-=======
     this.initializeCardForm();
->>>>>>> mitClasses
   }
   
 
   displayBooks() {
     this.shelfDisplay.innerHTML = ""
     this.shelf.forEach(card => {
+        card.createCard();
         this.shelfDisplay.appendChild(card.element);
         // card.setAttribute('style.display', "flex")
       });
@@ -144,15 +158,14 @@ class Library {
       details = this.readCard(e)
     }
 
+    
+
+
     // creates a new card object and adds the book details to the library shelf
     let card = new Card(...details)
     this.shelf.push(card)
     console.log(`<${card.title}> has been added to the library`)
-<<<<<<< HEAD
-    this.cardDesk.style.display = "none"
-=======
     this.modalBG.style.display = "none"
->>>>>>> mitClasses
     return card
   }
 
@@ -178,28 +191,12 @@ class Library {
           
     // scrubs form data
     let details = [...e.target.querySelectorAll('textarea, input')]
-<<<<<<< HEAD
-    details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
-=======
     details = details.map(detail => detail.type === 'checkbox' ? detail.checked : detail.value)
->>>>>>> mitClasses
     
     return details
   }
 
 
-<<<<<<< HEAD
-  initializeCardDesk() {
-    // Initializes all details related to the card creation form.
-
-    this.cardDesk = document.getElementById("myModal");
-    
-    this.addBookBtn = document.getElementById("add-book-btn");
-    this.addBookBtn.addEventListener('click', () => {this.cardDesk.style.display = "block";})
-
-    this.leaveDesk = document.getElementsByClassName("close")[0];
-    this.leaveDesk.addEventListener('click', () => {this.cardDesk.style.display = "none";})
-=======
   initializeCardForm() {
     // Initializes all details related to the card creation form.
 
@@ -210,26 +207,55 @@ class Library {
 
     this.leaveDesk = document.getElementsByClassName("close")[0];
     this.leaveDesk.addEventListener('click', () => {this.modalBG.style.display = "none";})
->>>>>>> mitClasses
 
-    this.cardForm = document.getElementById("new-book-form");
+    this.cardForm = document.getElementById("book-form");
     this.cardForm.addEventListener('submit', (e) => {this.addBook(null, e)})
 
     // alternate modal close (looks for clicks outside of the modal)
-<<<<<<< HEAD
-    window.onclick = function(e) {
-      if (e.target == this.cardDesk) {
-        this.cardDesk.style.display = "none";
-      }
-    }
-=======
     window.addEventListener('click', (e) => {
       if (e.target == this.modalBG) {
         this.modalBG.style.display = "none";
       }
     })
->>>>>>> mitClasses
   }
+
+  editBook(book) {
+    // this.cardForm.title.value = book.title
+    for (const x of this.cardForm) {
+      if (x.type === 'submit') {
+        continue
+      } else if (x.type === 'checkbox' && book[x.id]) {
+        x.checked = true
+      } else {
+        x.value = book[x.id]  
+      }
+    }
+    this.modalBG.style.display = 'flex'
+    
+
+
+    console.log(`The card for <${book.title}> has been updated`)
+  }
+
+  get shelf() {
+    return this.#shelf
+  }
+
+
+  set shelf(x) {
+    console.log('the shelf cannot be updated directly')
+  }
+
+
+  get shelfDisplay() {
+    return this.#shelfDisplay
+  }
+
+
+  set shelfDisplay(x) {
+    console.log('the shelf display cannot be updated directly')
+  }
+
 }
 
 
@@ -238,8 +264,8 @@ main = (() => {
   myLibrary = new Library
   
   // temp book objects for testing
-  // let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
-  // let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
+  let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
+  let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
   
   for (i=0; i<7; i++) {
     myLibrary.addBook(nineteenEightyFour);
@@ -254,10 +280,4 @@ main = (() => {
 // todo: is it possible to "name" the type of object? E.g. to typeof() an object and
 // see 'book' or 'card'. Saw this in the reading and think it is. To be tested!
 
-// todo: add getter/setter for shelf data structure?
-
-<<<<<<< HEAD
-// stopped at: bug - need to update closure of modal upon "outside of modal" click
-=======
-// stopped at: 
->>>>>>> mitClasses
+// stopped at: trying to create edit book feature (l222)
