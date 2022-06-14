@@ -209,6 +209,7 @@ main = (() => {
   // let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
   
 <<<<<<< HEAD
+<<<<<<< HEAD
   // for (i=0; i<7; i++) {
   //   myLibrary.addBook(null, nineteenEightyFour);
   //   myLibrary.addBook(null, lotr);
@@ -222,6 +223,21 @@ main = (() => {
     myLibrary.addBook(nineteenEightyFour);
     myLibrary.addBook(lotr);
 >>>>>>> 875867a (new card code factored into Library class)
+=======
+  for (i=0; i<7; i++) {
+    myLibrary.addBook(nineteenEightyFour);
+    myLibrary.addBook(lotr);
+=======
+  // for (i=0; i<7; i++) {
+  //   myLibrary.addBook(null, nineteenEightyFour);
+  //   myLibrary.addBook(null, lotr);
+  // }
+
+  return {
+    modal,
+    form
+>>>>>>> 93603f5 (killed testing data in main branch)
+>>>>>>> f5b130d (killed testing data in main branch)
   }
 
 })();
