@@ -119,7 +119,7 @@ class Library {
   constructor() {
     this.shelf = new Array;
     this.shelfDisplay = document.querySelector('#shelf');
-    this.initializeCardForm();
+    this.initializeCardDesk();
   }
   
 
@@ -144,7 +144,7 @@ class Library {
     let card = new Card(...details)
     this.shelf.push(card)
     console.log(`<${card.title}> has been added to the library`)
-    this.modalBG.style.display = "none"
+    this.cardDesk.style.display = "none"
     return card
   }
 
@@ -170,32 +170,32 @@ class Library {
           
     // scrubs form data
     let details = [...e.target.querySelectorAll('textarea, input')]
-    details = details.map(detail => detail.type === 'checkbox' ? detail.checked : detail.value)
+    details = details.map(deet => deet.type === 'checkbox' ? deet.checked : deet.value)
     
     return details
   }
 
 
-  initializeCardForm() {
+  initializeCardDesk() {
     // Initializes all details related to the card creation form.
 
-    this.modalBG = document.getElementById("myModal");
+    this.cardDesk = document.getElementById("myModal");
     
     this.addBookBtn = document.getElementById("add-book-btn");
-    this.addBookBtn.addEventListener('click', () => {this.modalBG.style.display = "block";})
+    this.addBookBtn.addEventListener('click', () => {this.cardDesk.style.display = "block";})
 
     this.leaveDesk = document.getElementsByClassName("close")[0];
-    this.leaveDesk.addEventListener('click', () => {this.modalBG.style.display = "none";})
+    this.leaveDesk.addEventListener('click', () => {this.cardDesk.style.display = "none";})
 
     this.cardForm = document.getElementById("new-book-form");
     this.cardForm.addEventListener('submit', (e) => {this.addBook(null, e)})
 
     // alternate modal close (looks for clicks outside of the modal)
-    window.addEventListener('click', (e) => {
-      if (e.target == this.modalBG) {
-        this.modalBG.style.display = "none";
+    window.onclick = function(e) {
+      if (e.target == this.cardDesk) {
+        this.cardDesk.style.display = "none";
       }
-    })
+    }
   }
 }
 
@@ -208,36 +208,9 @@ main = (() => {
   // let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
   // let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
   
-<<<<<<< HEAD
-<<<<<<< HEAD
-  // for (i=0; i<7; i++) {
-  //   myLibrary.addBook(null, nineteenEightyFour);
-  //   myLibrary.addBook(null, lotr);
-  // }
-
-  return {
-    modal,
-    form
-=======
   for (i=0; i<7; i++) {
     myLibrary.addBook(nineteenEightyFour);
     myLibrary.addBook(lotr);
->>>>>>> 875867a (new card code factored into Library class)
-=======
-  for (i=0; i<7; i++) {
-    myLibrary.addBook(nineteenEightyFour);
-    myLibrary.addBook(lotr);
-=======
-  // for (i=0; i<7; i++) {
-  //   myLibrary.addBook(null, nineteenEightyFour);
-  //   myLibrary.addBook(null, lotr);
-  // }
-
-  return {
-    modal,
-    form
->>>>>>> 93603f5 (killed testing data in main branch)
->>>>>>> f5b130d (killed testing data in main branch)
   }
 
 })();
@@ -250,4 +223,4 @@ main = (() => {
 
 // todo: add getter/setter for shelf data structure?
 
-// stopped at: 
+// stopped at: bug - need to update closure of modal upon "outside of modal" click
