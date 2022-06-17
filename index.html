@@ -32,14 +32,14 @@
                 </div>
                 <div class='pages'>
                     <label for='pages' form='book-form'>
-                        <input type='number' id='pages' class='pages' name='page-count' min='2' max="99999" placeholder='pages' onKeyPress="if(this.value.length==5) return false;" required>
+                        <input type='number' id='pages' class='pages' name='pages' min='2' max="99999" placeholder='pages' value='' onKeyPress="if(this.value.length==5) return false;" required>
                     </label>
                 </div>
                 <div class='read'>
                     <label for='read' form='book-form'>read:</label>
-                    <input type='checkbox' id='read' class='read' name='read'>
+                    <input type='checkbox' id='read' class='read' name='read' value="true">
                 </div>
-                
+                <input type='hidden' id='id' name='id' form='book-form'>
             </div>  
             <span class="close control">&times;</span>
         </form>

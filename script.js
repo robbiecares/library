@@ -67,8 +67,8 @@ class Card extends Book {
 
     const editBtn = document.createElement('span')
     editBtn.classList.add('control')
-    editBtn.innerHTML = 'E'
-    editBtn.addEventListener('click', (e) => this.edit(e))
+    editBtn.innerHTML = 'o'
+    editBtn.addEventListener('click', () => this.openCard())
     cardControls.appendChild(editBtn)
 
     let titleAndAuthor = document.createElement('div')
@@ -123,8 +123,27 @@ class Card extends Book {
   }
 
 
-  edit(e) {
-    myLibrary.editBook(this)
+  openCard() {
+    // Displays current card details in the card form.
+
+    let card = new FormData(myLibrary.cardForm);
+  
+    card.set('read', Boolean(this.read))
+
+    for (const key of card.keys()) {
+      let element = myLibrary.cardForm[key];
+      if (element.type === 'checkbox') {
+        element.checked = this[key]
+      } else {
+        element.value = this[key]
+      }
+    };
+    myLibrary.modalBG.style.display = 'flex'
+  }
+
+
+  updateCard() {
+
   }
 }
 
@@ -132,8 +151,10 @@ class Card extends Book {
 class Library { 
   // Data structure class for data collection, maintenance and display.
 
-  #shelf = new Array
+  #shelf = new Array;
   #shelfDisplay = document.getElementById('shelf');
+  #currentCard;
+
 
   constructor() {
     this.initializeCardForm();
@@ -150,23 +171,47 @@ class Library {
   }
 
 
-  addBook(details, e=null) {
-    // Creates a new card based on user data and adds the card details to the library shelf.
-
-    // scrub details from cardform (this step is skipped when submitting test data)
-    if (e) {
-      details = this.readCard(e)
-    }
+  save(details, e=null) {
+    // Creates or updates a card based on user or test data and adds the card details to the library shelf.
 
     
+    // prevent form from refreshing page when user submits data 
+    if (e) {
+      e.preventDefault()
+    }
 
+    // if ID in form elements:
+
+      // update book object based on form details (e.g. form.title = book.title)
+    
+    // else 
+
+
+    // scrub details from card (this step is skipped when submitting test data)
+    if (!details) {
+      details = this.readCardForm(e)      
+    }
+
+    if (!this.#currentCard) {
+      let card = new Card(...details)
+      this.shelf.push(card)
+      console.log(`<${card.title}> has been added to the library`)
+    } else {
+      for (const x of this.cardForm) {
+        if (x.type === 'submit') {
+          continue
+        } else if (x.type === 'checkbox' && book[x.id]) {
+          x.checked = true
+        } else {
+          x.value = book[x.id]  
+        }
+      }
+    }
+    this.modalBG.style.display = "none"
+    
 
     // creates a new card object and adds the book details to the library shelf
-    let card = new Card(...details)
-    this.shelf.push(card)
-    console.log(`<${card.title}> has been added to the library`)
-    this.modalBG.style.display = "none"
-    return card
+    
   }
 
 
@@ -183,17 +228,37 @@ class Library {
   }
 
 
-  readCard(e) {
-    // Reads & formats user input data for new card creation.
-      
-    // prevents form from refreshing page upon submission 
-    e.preventDefault()
-          
-    // scrubs form data
-    let details = [...e.target.querySelectorAll('textarea, input')]
-    details = details.map(detail => detail.type === 'checkbox' ? detail.checked : detail.value)
+  readCardForm(e) {
+    // Reads & formats user input data for new card creation.          
     
+    let formData = new FormData(this.cardForm)
+
+    // let details = new Array()
+    // for (const value of formData.values()) {
+    //   console.log(value)  
+    //   details.push(value)
+    // }
+    
+    let details = [...formData.entries()]
+
+    // console.log(formData.values())
+
+    // let details = Array(...e.target.elements)
+    // console.log(details)
+    // for (let detail in details) {
+    //   console.log(detail)
+    //   if (detail.type === 'submit') {
+    //     details.pop(detail)
+    //   } else if (detail.type === 'checkbox') {
+    //     detail = detail.checked
+    //   } else {
+    //     detail = detail.value
+    //   }
+    // }
+    
+    console.log(details)
     return details
+
   }
 
 
@@ -206,10 +271,12 @@ class Library {
     this.addBookBtn.addEventListener('click', () => {this.modalBG.style.display = "block";})
 
     this.leaveDesk = document.getElementsByClassName("close")[0];
-    this.leaveDesk.addEventListener('click', () => {this.modalBG.style.display = "none";})
+    this.leaveDesk.addEventListener('click', () => {
+      this.modalBG.style.display = "none";
+    })
 
     this.cardForm = document.getElementById("book-form");
-    this.cardForm.addEventListener('submit', (e) => {this.addBook(null, e)})
+    this.cardForm.addEventListener('submit', (e) => {this.save(null, e)})
 
     // alternate modal close (looks for clicks outside of the modal)
     window.addEventListener('click', (e) => {
@@ -219,23 +286,6 @@ class Library {
     })
   }
 
-  editBook(book) {
-    // this.cardForm.title.value = book.title
-    for (const x of this.cardForm) {
-      if (x.type === 'submit') {
-        continue
-      } else if (x.type === 'checkbox' && book[x.id]) {
-        x.checked = true
-      } else {
-        x.value = book[x.id]  
-      }
-    }
-    this.modalBG.style.display = 'flex'
-    
-
-
-    console.log(`The card for <${book.title}> has been updated`)
-  }
 
   get shelf() {
     return this.#shelf
@@ -264,12 +314,14 @@ main = (() => {
   myLibrary = new Library
   
   // temp book objects for testing
-  let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412]
+  let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412, true]
   let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
+  let theQuietPowerOfIntroverts = ['The Quiet Power of Introverts', 'Susan Cain', 371]
   
-  for (i=0; i<7; i++) {
-    myLibrary.addBook(nineteenEightyFour);
-    myLibrary.addBook(lotr);
+  for (i=0; i<6; i++) {
+    myLibrary.save(nineteenEightyFour);
+    myLibrary.save(lotr);
+    myLibrary.save(theQuietPowerOfIntroverts);
   }
 
 })();
@@ -279,5 +331,8 @@ main = (() => {
 
 // todo: is it possible to "name" the type of object? E.g. to typeof() an object and
 // see 'book' or 'card'. Saw this in the reading and think it is. To be tested!
+
+//idea: could checkboxes in formdata object be "abstracted" to look for any/all booleans in the card object?
+//idea: could form data objects be passed around during editing?
 
 // stopped at: trying to create edit book feature (l222)
