@@ -5,8 +5,8 @@ class Book {
   constructor (title, author, pages, read=false) {
     this.title = title
     this.author = author
-    this.pages = pages
-    this.read = read
+    this.pages = Number(pages)
+    this.read = Boolean(read)
     this._id = Date.now()
   }
 
@@ -103,7 +103,7 @@ class Card extends Book {
     readStatus.innerHTML = `${this.read ? '✓' : '✖'}`
     readStatus.style.color = this.read ? 'green' : 'red'
 
-    console.log(`A card has been created for <${this.title}>`)
+    console.log(`a new card with ID <${this.id}> has been created`)
     return card
   }
 
@@ -125,12 +125,9 @@ class Card extends Book {
 
   openCard() {
     // Displays current card details in the card form.
-
-    let card = new FormData(myLibrary.cardForm);
   
-    card.set('read', Boolean(this.read))
-
-    for (const key of card.keys()) {
+    myLibrary.formData.set('read', Boolean(this.read))
+    for (const key of myLibrary.formData.keys()) {
       let element = myLibrary.cardForm[key];
       if (element.type === 'checkbox') {
         element.checked = this[key]
@@ -139,22 +136,26 @@ class Card extends Book {
       }
     };
     myLibrary.modalBG.style.display = 'flex'
+    console.log('open card: ' + myLibrary.cardForm.id.value)
   }
 
 
   updateCard() {
+    // collect details from form
+    // loop:
+      // book(super) attributes = form details
+    // run "update display" on card
 
+    console.log('card updated')
   }
-}
 
+}
 
 class Library { 
   // Data structure class for data collection, maintenance and display.
 
   #shelf = new Array;
   #shelfDisplay = document.getElementById('shelf');
-  #currentCard;
-
 
   constructor() {
     this.initializeCardForm();
@@ -175,43 +176,31 @@ class Library {
     // Creates or updates a card based on user or test data and adds the card details to the library shelf.
 
     
-    // prevent form from refreshing page when user submits data 
+    // prevent page refresh during form submission
     if (e) {
-      e.preventDefault()
+      e.preventDefault();
+      this.formData = new FormData(this.cardForm)
     }
 
-    // if ID in form elements:
-
-      // update book object based on form details (e.g. form.title = book.title)
+    // if the open book has an ID update book details  
+    const id = this.formData.get('id')
+    if (id) {
+      console.log('book has an ID')
+      const book = myLibrary.findBook(id)
+      book.updateCard()
+      return;
+    }
     
-    // else 
-
-
-    // scrub details from card (this step is skipped when submitting test data)
+    // format form data 
     if (!details) {
-      details = this.readCardForm(e)      
+      details = this.readCardForm();
     }
-
-    if (!this.#currentCard) {
-      let card = new Card(...details)
-      this.shelf.push(card)
-      console.log(`<${card.title}> has been added to the library`)
-    } else {
-      for (const x of this.cardForm) {
-        if (x.type === 'submit') {
-          continue
-        } else if (x.type === 'checkbox' && book[x.id]) {
-          x.checked = true
-        } else {
-          x.value = book[x.id]  
-        }
-      }
-    }
+    
+    let card = new Card(...details)
+    this.shelf.push(card)
+    console.log(`card ID <${card.id}> has been added to the library shelf`)    
     this.modalBG.style.display = "none"
-    
 
-    // creates a new card object and adds the book details to the library shelf
-    
   }
 
 
@@ -228,39 +217,18 @@ class Library {
   }
 
 
-  readCardForm(e) {
-    // Reads & formats user input data for new card creation.          
+  readCardForm() {
+    // Formats user input data for new card creation.          
     
-    let formData = new FormData(this.cardForm)
+    let details = new Array()
 
-    // let details = new Array()
-    // for (const value of formData.values()) {
-    //   console.log(value)  
-    //   details.push(value)
-    // }
+    for (let [key, value] of this.formData) {
+      details.push(value)
+    };
     
-    let details = [...formData.entries()]
-
-    // console.log(formData.values())
-
-    // let details = Array(...e.target.elements)
-    // console.log(details)
-    // for (let detail in details) {
-    //   console.log(detail)
-    //   if (detail.type === 'submit') {
-    //     details.pop(detail)
-    //   } else if (detail.type === 'checkbox') {
-    //     detail = detail.checked
-    //   } else {
-    //     detail = detail.value
-    //   }
-    // }
-    
-    console.log(details)
     return details
-
   }
-
+  
 
   initializeCardForm() {
     // Initializes all details related to the card creation form.
@@ -268,7 +236,7 @@ class Library {
     this.modalBG = document.getElementById("myModal");
     
     this.addBookBtn = document.getElementById("add-book-btn");
-    this.addBookBtn.addEventListener('click', () => {this.modalBG.style.display = "block";})
+    this.addBookBtn.addEventListener('click', this.openDesk)
 
     this.leaveDesk = document.getElementsByClassName("close")[0];
     this.leaveDesk.addEventListener('click', () => {
@@ -277,6 +245,7 @@ class Library {
 
     this.cardForm = document.getElementById("book-form");
     this.cardForm.addEventListener('submit', (e) => {this.save(null, e)})
+    this.formData = new FormData(this.cardForm)
 
     // alternate modal close (looks for clicks outside of the modal)
     window.addEventListener('click', (e) => {
@@ -306,6 +275,12 @@ class Library {
     console.log('the shelf display cannot be updated directly')
   }
 
+
+  openDesk() {
+    myLibrary.modalBG.style.display = "flex";
+    myLibrary.cardForm.id.value = ''
+  }
+
 }
 
 
@@ -314,13 +289,13 @@ main = (() => {
   myLibrary = new Library
   
   // temp book objects for testing
-  let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', 412, true]
-  let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, true]
+  let lotr = ['The Lord of the Rings: The Two Towers', 'J.R.R. Tolkien', '412', true]
+  let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, 'true']
   let theQuietPowerOfIntroverts = ['The Quiet Power of Introverts', 'Susan Cain', 371]
   
   for (i=0; i<6; i++) {
-    myLibrary.save(nineteenEightyFour);
     myLibrary.save(lotr);
+    myLibrary.save(nineteenEightyFour);
     myLibrary.save(theQuietPowerOfIntroverts);
   }
 
