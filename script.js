@@ -146,7 +146,7 @@ class Card extends Book {
 
   remove(e) {
     this.element.remove()
-    console.log(`The card for <${this.title}> has been deleted`)
+    console.log(`The card with id ${this.id} has been deleted`)
     myLibrary.removeBook(this)
 
   }
@@ -216,9 +216,7 @@ class Library {
   displayBooks() {
     this.shelfDisplay.innerHTML = ""
     this.shelf.forEach(card => {
-        card.createCard();
         this.shelfDisplay.appendChild(card.element);
-        // card.setAttribute('style.display', "flex")
       });
   }
 
