@@ -5,14 +5,34 @@ class Book {
   constructor (title, author, pages, read=false) {
     this.title = title
     this.author = author
-    this.pages = Number(pages)
-    this.read = Boolean(read)
+    this._pages = Number(pages)
+    this._read = Boolean(read)
     this._id = Date.now()
   }
 
 
-  displayInfo = () => {
+  displayInfo() {
       return `${this.title} by ${this.author}, ${this.pages} pages, ${this.read ? 'read': 'not read yet'}`
+  }
+
+
+  get pages() {
+    return this._pages
+  }
+
+
+  set pages(i) {
+    this._pages = Number(i)
+  }
+
+
+  get read() {
+    return this._read
+  }
+
+
+  set read(i) {
+    this._read = i === 'false'? false : Boolean(i)
   }
 
 
@@ -24,8 +44,8 @@ class Book {
   set id(i) {
     console.log("this book already has an ID")
   }
-  
-  
+
+
   updateReadStatus() {
     this.read = !this.read;
     console.log(`fully read?: ${this.read}`)
@@ -44,7 +64,7 @@ class Card extends Book {
 
 
   createCard() {
-    // creates the DOM elements for the card
+    // creates the DOM elements of the card and set variables for the each detail
 
     const card = document.createElement('div')
     card.classList.add('card')
@@ -74,35 +94,51 @@ class Card extends Book {
     let titleAndAuthor = document.createElement('div')
     cardData.appendChild(titleAndAuthor)
     
+    // title
     let content = document.createElement('div')
+    titleAndAuthor.appendChild(content)
     content.classList.add('title')
     content.innerHTML = this.title
-    titleAndAuthor.appendChild(content)
-    
-    content = document.createElement('div')
+    this.titleElement = content
+
+    // author
+    let label = document.createElement('div')
+    titleAndAuthor.appendChild(label)
+    label.innerHTML = 'by '
+
+    content = document.createElement('span')
+    label.appendChild(content)
     content.classList.add('author')
-    content.innerHTML =  `by ${this.author}`
-    titleAndAuthor.appendChild(content)
+    content.innerHTML =  this.author
+    this.authorElement = content
 
 
     let pagesAndRead = document.createElement('div')
     pagesAndRead.classList.add('pages-and-read')
     cardData.appendChild(pagesAndRead)
 
-    content = document.createElement('div')
-    pagesAndRead.appendChild(content)
-    content.innerHTML = `pages: ${this.pages}`
+    // pages
+    label = document.createElement('div')
+    pagesAndRead.appendChild(label)
+    label.innerHTML = 'pages: '
+    
+    content = document.createElement('span')
+    label.appendChild(content)
+    content.innerHTML = this.pages
+    this.pagesElement = content
   
-    let readStatusLabel = document.createElement('div')
-    pagesAndRead.appendChild(readStatusLabel)
-    readStatusLabel.innerHTML = 'read: '
-    let readStatus = document.createElement('span')  
-    readStatusLabel.appendChild(readStatus)
-    readStatus.classList.add('read-status')
-    readStatus.addEventListener('click', (e) => this.updateReadStatus(e))    
-    readStatus.innerHTML = `${this.read ? '✓' : '✖'}`
-    readStatus.style.color = this.read ? 'green' : 'red'
+    // read
+    label = document.createElement('div')
+    pagesAndRead.appendChild(label)
+    label.innerHTML = 'read: '
 
+    content = document.createElement('span')  
+    label.appendChild(content)
+    content.classList.add('read-status')
+    content.addEventListener('click', (e) => this.updateReadStatus(e));
+    this.readElement = content;
+    this.setReadElement();
+    
     console.log(`a new card with ID <${this.id}> has been created`)
     return card
   }
@@ -116,10 +152,17 @@ class Card extends Book {
   }
 
 
+  setReadElement(){
+    // Updates display element for book's 'read' attribute.
+    this.readElement.innerHTML = `${this.read ? '✓' : '✖'}`;
+    this.readElement.style.color = this.read ? 'green' : 'red';
+  }
+
+
   updateReadStatus(e) {
     super.updateReadStatus()
-    e.target.innerHTML = `${this.read ?'✓' : '✖'}`
-    e.target.style.color = this.read ? 'green' : 'red'
+    this.setReadElement()
+    
   }
 
 
@@ -140,13 +183,21 @@ class Card extends Book {
   }
 
 
-  updateCard() {
-    // collect details from form
-    // loop:
-      // book(super) attributes = form details
-    // run "update display" on card
+  updateCard(details) {
+    // Updates details of existing card object and its display elements.
+    
+    details.delete('id')
+    details.set('read', myLibrary.cardForm.read.checked)
+    for (let [key, value] of details.entries()) {    
+      console.log(key, value)
+      this[key] = value;
+      this[key + 'Element'].innerHTML = this[key]
+    }
+    this.setReadElement()
 
     console.log('card updated')
+    myLibrary.modalBG.style.display = "none"
+
   }
 
 }
@@ -158,7 +209,7 @@ class Library {
   #shelfDisplay = document.getElementById('shelf');
 
   constructor() {
-    this.initializeCardForm();
+    this.initializeCardDesk();
   }
   
 
@@ -175,32 +226,29 @@ class Library {
   save(details, e=null) {
     // Creates or updates a card based on user or test data and adds the card details to the library shelf.
 
+    this.formData = new FormData(this.cardForm)
+    const id = Number(this.formData.get('id'))
     
     // prevent page refresh during form submission
     if (e) {
       e.preventDefault();
-      this.formData = new FormData(this.cardForm)
-    }
-
-    // if the open book has an ID update book details  
-    const id = this.formData.get('id')
-    if (id) {
-      console.log('book has an ID')
-      const book = myLibrary.findBook(id)
-      book.updateCard()
-      return;
     }
     
-    // format form data 
-    if (!details) {
-      details = this.readCardForm();
+    // create new book
+    if (!id) {
+      // format form data 
+      if (!details) {
+        details = this.readCardForm();
+      }
+      let card = new Card(...details)
+      this.shelf.push(card)
+      console.log(`card ID <${card.id}> has been added to the library shelf`)
+    // update existing book
+    } else {
+      let book = myLibrary.findBook(id)
+      book.updateCard(this.formData)
     }
-    
-    let card = new Card(...details)
-    this.shelf.push(card)
-    console.log(`card ID <${card.id}> has been added to the library shelf`)    
     this.modalBG.style.display = "none"
-
   }
 
 
@@ -221,17 +269,17 @@ class Library {
     // Formats user input data for new card creation.          
     
     let details = new Array()
-
-    for (let [key, value] of this.formData) {
+    this.formData.set('read', this.cardForm.read.checked)
+    for (let [_, value] of this.formData) {
       details.push(value)
     };
-    
+    // console.log(details)
     return details
   }
   
 
-  initializeCardForm() {
-    // Initializes all details related to the card creation form.
+  initializeCardDesk() {
+    // Initializes all objects and events necessary for card creation.
 
     this.modalBG = document.getElementById("myModal");
     
@@ -245,7 +293,7 @@ class Library {
 
     this.cardForm = document.getElementById("book-form");
     this.cardForm.addEventListener('submit', (e) => {this.save(null, e)})
-    this.formData = new FormData(this.cardForm)
+    this.formData = null;
 
     // alternate modal close (looks for clicks outside of the modal)
     window.addEventListener('click', (e) => {
@@ -293,7 +341,7 @@ main = (() => {
   let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, 'true']
   let theQuietPowerOfIntroverts = ['The Quiet Power of Introverts', 'Susan Cain', 371]
   
-  for (i=0; i<6; i++) {
+  for (i=0; i<1; i++) {
     myLibrary.save(lotr);
     myLibrary.save(nineteenEightyFour);
     myLibrary.save(theQuietPowerOfIntroverts);
@@ -308,6 +356,3 @@ main = (() => {
 // see 'book' or 'card'. Saw this in the reading and think it is. To be tested!
 
 //idea: could checkboxes in formdata object be "abstracted" to look for any/all booleans in the card object?
-//idea: could form data objects be passed around during editing?
-
-// stopped at: trying to create edit book feature (l222)
