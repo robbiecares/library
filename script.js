@@ -81,45 +81,49 @@ class Card extends Book {
 
     const removeBtn = document.createElement('span')
     removeBtn.classList.add('control', 'close')
-    removeBtn.innerHTML = '&times;' 
+    removeBtn.classList.add('fa')
+    removeBtn.innerHTML = '&#xf00d;' 
     removeBtn.addEventListener('click', (e) => this.remove(e))
     cardControls.appendChild(removeBtn)
 
     const editBtn = document.createElement('span')
     editBtn.classList.add('control')
-    editBtn.innerHTML = 'o'
+    editBtn.classList.add('material-icons')
+    editBtn.innerHTML = '&#xe3c9;'
     editBtn.addEventListener('click', () => this.openCard())
     cardControls.appendChild(editBtn)
-
-    let titleAndAuthor = document.createElement('div')
-    cardData.appendChild(titleAndAuthor)
     
     // title
     let content = document.createElement('div')
-    titleAndAuthor.appendChild(content)
+    cardData.appendChild(content)
     content.classList.add('title')
     content.innerHTML = this.title
     this.titleElement = content
 
     // author
+    let container = document.createElement('div')
+    cardData.appendChild(container)
+    container.classList.add('author')
+    
     let label = document.createElement('div')
-    titleAndAuthor.appendChild(label)
+    container.appendChild(label)
     label.innerHTML = 'by '
 
     content = document.createElement('span')
-    label.appendChild(content)
+    container.appendChild(content)
     content.classList.add('author')
     content.innerHTML =  this.author
     this.authorElement = content
 
 
-    let pagesAndRead = document.createElement('div')
-    pagesAndRead.classList.add('pages-and-read')
-    cardData.appendChild(pagesAndRead)
+    // elements which should appear at the bottom of the card
+    const bottomElements = document.createElement('div')
+    bottomElements.classList.add('bottom-elements')
+    cardData.appendChild(bottomElements)
 
     // pages
     label = document.createElement('div')
-    pagesAndRead.appendChild(label)
+    bottomElements.appendChild(label)    
     label.innerHTML = 'pages: '
     
     content = document.createElement('span')
@@ -129,12 +133,13 @@ class Card extends Book {
   
     // read
     label = document.createElement('div')
-    pagesAndRead.appendChild(label)
+    bottomElements.appendChild(label)
     label.innerHTML = 'read: '
 
     content = document.createElement('span')  
     label.appendChild(content)
     content.classList.add('read-status')
+    content.classList.add('fa')
     content.addEventListener('click', (e) => this.updateReadStatus(e));
     this.readElement = content;
     this.setReadElement();
@@ -154,7 +159,7 @@ class Card extends Book {
 
   setReadElement(){
     // Updates display element for book's 'read' attribute.
-    this.readElement.innerHTML = `${this.read ? '✓' : '✖'}`;
+    this.readElement.innerHTML = `${this.read ? '&#xf00c;' : '&#xf00d;'}`;
     this.readElement.style.color = this.read ? 'green' : 'red';
   }
 
@@ -279,12 +284,12 @@ class Library {
   initializeCardDesk() {
     // Initializes all objects and events necessary for card creation.
 
-    this.modalBG = document.getElementById("myModal");
+    this.modalBG = document.getElementById("modal");
     
     this.addBookBtn = document.getElementById("add-book-btn");
     this.addBookBtn.addEventListener('click', this.openDesk)
 
-    this.leaveDesk = document.getElementsByClassName("close")[0];
+    this.leaveDesk = document.getElementById("leave-desk");
     this.leaveDesk.addEventListener('click', () => {
       this.modalBG.style.display = "none";
     })
@@ -352,5 +357,7 @@ main = (() => {
 
 // todo: is it possible to "name" the type of object? E.g. to typeof() an object and
 // see 'book' or 'card'. Saw this in the reading and think it is. To be tested!
+
+// todo: fix cardform formatting
 
 //idea: could checkboxes in formdata object be "abstracted" to look for any/all booleans in the card object?
