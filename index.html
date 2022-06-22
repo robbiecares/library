@@ -21,31 +21,30 @@
     <footer></footer>
     <!-- The Modal -->
     <div id="modal" class="modal">
-
-    <!-- Modal content -->
-    <div class="card-desk">
-        <form id='book-form' class='card' autocomplete="off">
-            <div>
-                <textarea autofocus form='book-form' id='title' class='title' name='title' value='' placeholder="Title" rows='3' maxlength='102' required></textarea>
-                <label for='title' form='book-form'></label>
-                <div class="author">
-                    <label for='author' form='book-form'>by</label>
-                    <input type='text' id='author' name='author' value='' placeholder="Author" maxlength="100" required>
-                </div>
-                <div class='pages'>
+        <!-- Modal content -->
+        <div class="card-desk">
+            <div class="card">
+                <form id='book-form' class='card-data' autocomplete="off">                    
+                    <label for='title' form='book-form'>
+                        <textarea autofocus id='title' class='title' name='title' value='' placeholder="Title" rows='3' maxlength='102' required></textarea>
+                    </label>
+                    <label for='author' form='book-form'>by
+                        <input type='text' id='author' class='author' name='author' value='' placeholder="Author" maxlength="100" required>
+                    </label>
                     <label for='pages' form='book-form'>
                         <input type='number' id='pages' class='pages' name='pages' min='2' max="99999" placeholder='pages' value='' onKeyPress="if(this.value.length==5) return false;" required>
                     </label>
+                    <label for='read' form='book-form'>read:
+                        <input type='checkbox' id='read' class='read' name='read' value="true">
+                    </label>
+                    <input type='hidden' id='id' name='id' form='book-form'>
+                </form>
+                <div class="card-controls">
+                    <i id='leave-desk' class="control fa">&#xf00d;</i>
                 </div>
-                <div class='read'>
-                    <label for='read' form='book-form'>read:</label>
-                    <input type='checkbox' id='read' class='read' name='read' value="true">
-                </div>
-                <input type='hidden' id='id' name='id' form='book-form'>
-            </div>  
-            <i id='leave-desk' class="control fa">&#xf00d;</i>
-        </form>
-        <input type ='submit' id ='save-book-btn' class='btn' form='book-form' value='Save'>              
+            </div>
+            <input type ='submit' id ='save-book-btn' class='btn' form='book-form' value='Save'>              
+        </div>  
     </div>
     <script src='script.js'></script>
 </body>

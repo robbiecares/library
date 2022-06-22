@@ -101,16 +101,13 @@ class Card extends Book {
     this.titleElement = content
 
     // author
-    let container = document.createElement('div')
-    cardData.appendChild(container)
-    container.classList.add('author')
-    
     let label = document.createElement('div')
-    container.appendChild(label)
-    label.innerHTML = 'by '
+    cardData.appendChild(label)
+    label.classList.add('label')
+    label.innerHTML = 'by'
 
     content = document.createElement('span')
-    container.appendChild(content)
+    label.appendChild(content)
     content.classList.add('author')
     content.innerHTML =  this.author
     this.authorElement = content
@@ -124,7 +121,8 @@ class Card extends Book {
     // pages
     label = document.createElement('div')
     bottomElements.appendChild(label)    
-    label.innerHTML = 'pages: '
+    label.classList.add('label')
+    label.innerHTML = 'pages:'
     
     content = document.createElement('span')
     label.appendChild(content)
@@ -134,7 +132,8 @@ class Card extends Book {
     // read
     label = document.createElement('div')
     bottomElements.appendChild(label)
-    label.innerHTML = 'read: '
+    label.classList.add('label')
+    label.innerHTML = 'read:'
 
     content = document.createElement('span')  
     label.appendChild(content)
@@ -344,7 +343,7 @@ main = (() => {
   let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, 'true']
   let theQuietPowerOfIntroverts = ['The Quiet Power of Introverts', 'Susan Cain', 371]
   
-  for (i=0; i<1; i++) {
+  for (i=0; i<3; i++) {
     myLibrary.save(lotr);
     myLibrary.save(nineteenEightyFour);
     myLibrary.save(theQuietPowerOfIntroverts);
@@ -353,11 +352,7 @@ main = (() => {
 })();
 
 
-
-
 // todo: is it possible to "name" the type of object? E.g. to typeof() an object and
 // see 'book' or 'card'. Saw this in the reading and think it is. To be tested!
-
-// todo: fix cardform formatting
 
 //idea: could checkboxes in formdata object be "abstracted" to look for any/all booleans in the card object?

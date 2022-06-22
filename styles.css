@@ -66,7 +66,7 @@ body {
   background-color: plum;
   box-shadow: 10px 5px 5px gray;
   margin: 1%;
-  padding: .5%;
+  padding: .5rem;
 }
 
 .card-data {
@@ -75,6 +75,10 @@ body {
     flex: 1;
     font-size: 1.5rem;
     padding: .25rem;
+}
+
+.label > * {
+  padding-left: .5rem;
 }
 
 .card-controls {
@@ -87,14 +91,6 @@ body {
 .title {
   font-size: 2rem;
   overflow-wrap: anywhere;
-  width: 100%;
-}
-
-.author {
-  display: flex;
-  align-content:center;
-  font-size: 1.5rem;
-  gap: .5rem;  
 }
 
 .bottom-elements {
@@ -132,10 +128,9 @@ body {
 .card-desk {
     background-color: #fefefe;
     margin: 15% auto; 
-    /* padding: 1% 2%; */
+    padding: 1% 2%;
     /* border: 1px solid #888; */
-    width: 60%; 
-    /* height: 40%; */
+    width: fit-content;
     display: flex;
     flex-flow: column;
     justify-content: space-between;
@@ -143,11 +138,38 @@ body {
     gap: 1.5rem;
   }
 
-  #book-form {
-    /* width: 80%; */
+form {
+  gap: 1.25rem;
+}
 
-  }
+form input, textarea {
+  background-color: plum;
+  border: unset;
+  border-bottom: 2px solid black;
+  font-size: 1.5rem;
+}
 
+input:focus, textarea {
+  outline: none;
+}
+
+form .title {
+  min-width: 40rem;
+  resize: none;
+}
+
+form .author {
+  width: 80%;
+}
+
+form .pages {
+  max-width: 6rem;
+}
+
+form .read {
+  height: 1.5rem;
+  width: 1.5rem;
+}
 
 /* The close & edit buttons */
 .control {
@@ -161,28 +183,4 @@ body {
   color: black;
   text-decoration: none;
   cursor: pointer;
-} 
-
-form input, textarea {
-  background-color: plum;
-  border: unset;
-  border-bottom: 2px solid black;
-  font-size: 1.5rem;
-}
- 
-textarea {
-  resize: none;
-}
-
-input.pages {
-  max-width: 6rem;
-}
-
-.read input {
-  height: 1.5rem;
-  width: 1.5rem;
-}
-
-input:focus, textarea {
-  outline: none;
 }
