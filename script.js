@@ -52,7 +52,6 @@ class Book {
   }
 }
 
-
 class Card extends Book {
   // Display class for book details
 
@@ -343,7 +342,7 @@ main = (() => {
   let nineteenEightyFour = ['Nineteen Eighty-four', 'George Orwell', 318, 'true']
   let theQuietPowerOfIntroverts = ['The Quiet Power of Introverts', 'Susan Cain', 371]
   
-  for (i=0; i<3; i++) {
+  for (i=0; i<1; i++) {
     myLibrary.save(lotr);
     myLibrary.save(nineteenEightyFour);
     myLibrary.save(theQuietPowerOfIntroverts);

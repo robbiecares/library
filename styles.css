@@ -27,23 +27,42 @@ body {
 }
 
 #controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  text-align: center;
   font-weight: bolder;
-  position: sticky;
-  top: 0;
-  background-color: white;
   border-bottom: 1px solid black ;
   box-shadow: 10px 10px 10px gray;
 }
 
+.control-item {
+  margin: 1rem;
+}
+
+.control-item:first-child {
+  margin-left: auto;
+}
+
+.control-item:last-child {
+  margin-left: auto;
+}
+
 .btn {
-  padding: 1%;
+  padding: 1rem; 
   font-weight: bolder;
 }
 
-#add-book-btn {
-  margin: 1%;
+.source {
+  font-size: 36px;
+  color: black;
+}
+
+.source:hover {
+  color: plum;
+}
+.source:visited {
+  color: black;
 }
 
 #shelf {
